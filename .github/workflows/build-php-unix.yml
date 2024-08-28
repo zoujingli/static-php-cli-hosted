@@ -166,15 +166,38 @@ jobs:
             echo "# Note\n\nCurrent distribution uses extensions:\n\n${{ steps.process-env.outputs.EXTENSIONS }}\n\nUsing compile command:\n\n  bin/spc build --build-cli --build-micro --build-fpm ${{ steps.process-env.outputs.EXTENSIONS }} --debug --with-upx-pack" > dist/README.txt
           fi
 
-      - name: "Deploy to self-hosted OSS"
-        uses: static-php/upload-s3-action@v1.0.0
+      - name: "Deploy to self-hosted Qiniu"
+        uses: hujiulong/action-qiniu-upload@master
         with:
-          aws_key_id: ${{ secrets.AWS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: "dist/"
-          destination_dir: static-php-cli/${{ matrix.combination }}/
-          endpoint: ${{ secrets.AWS_ENDPOINT }}
+          # Bucket name, required.
+          bucket: ${{ secrets.QINIU_BUCKET }}
+
+          # Your qiniu access key, required.
+          access_key: ${{ secrets.QINIU_ACCESS_KEY }}
+
+          # Your qiniu secret key, required.
+          secret_key: ${{ secrets.QINIU_SECRET_KEY }}
+
+          # The local directory (or file) you want to upload to bucket.
+          # Default: './'
+          source_dir: 'dist/'
+
+          # The directory inside the bucket you want to upload to, namely key prefix prepended to dest file key.
+          # Default: '/'
+          dest_dir: static-php-cli/${{ matrix.combination }}/
+
+          # Whether to ignore source maps.
+          # Default: true
+          ignore_source_map: true
+      #      - name: "Deploy to self-hosted OSS"
+      #        uses: static-php/upload-s3-action@v1.0.0
+      #        with:
+      #          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+      #          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #          aws_bucket: ${{ secrets.AWS_BUCKET }}
+      #          source_dir: "dist/"
+      #          destination_dir: static-php-cli/${{ matrix.combination }}/
+      #          endpoint: ${{ secrets.AWS_ENDPOINT }}
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
