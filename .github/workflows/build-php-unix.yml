@@ -31,7 +31,8 @@ jobs:
         run: |
           case "${{ matrix.combination }}" in
             minimal) 
-              echo "EXTENSIONS=pcntl,posix,mbstring,tokenizer,phar" >> "$GITHUB_OUTPUT"
+              # echo "EXTENSIONS=pcntl,posix,mbstring,tokenizer,phar" >> "$GITHUB_OUTPUT"
+              echo "EXTENSIONS=pcntl,posix,mbstring,tokenizer,openssl,redis,pdo,pdo_mysql,phar,swoole" >> "$GITHUB_OUTPUT"
               echo "DEPLOY_TARGET=${{ secrets.DEPLOY_SERVER_TARGET_MINIMAL }}" >> "$GITHUB_OUTPUT"
               ;;
             common)  
@@ -126,8 +127,7 @@ jobs:
             fi
           fi
           
-          # ${{ steps.process-env.outputs.CMD }} build --build-cli --build-micro --with-micro-fake-cli --build-fpm ${{ steps.process-env.outputs.EXTENSIONS }} --debug $UPX
-          ${{ steps.process-env.outputs.CMD }} build --build-cli --build-micro --with-micro-fake-cli ${{ steps.process-env.outputs.EXTENSIONS }} --debug $UPX
+          ${{ steps.process-env.outputs.CMD }} build --build-cli --build-micro --with-micro-fake-cli --build-fpm ${{ steps.process-env.outputs.EXTENSIONS }} --debug $UPX
 
           # Copy out from buildroot, because docker build has different permission
           mkdir -p tmp_dist/
@@ -165,7 +165,7 @@ jobs:
             cp -r buildroot/license dist/
             cp buildroot/build-extensions.json dist/
             cp buildroot/build-libraries.json dist/
-            echo "# Note\n\nCurrent distribution uses extensions:\n\n${{ steps.process-env.outputs.EXTENSIONS }}\n\nUsing compile command:\n\n  bin/spc build --build-cli --build-micro --build-fpm ${{ steps.process-env.outputs.EXTENSIONS }} --debug --with-upx-pack" > dist/README.txt
+            echo "# Note\n\nCurrent distribution uses extensions:\n\n${{ steps.process-env.outputs.EXTENSIONS }}\n\nUsing compile command:\n\n  bin/spc build --build-cli --build-micro --with-micro-fake-cli --build-fpm ${{ steps.process-env.outputs.EXTENSIONS }} --debug --with-upx-pack" > dist/README.txt
           fi
 
       #      - name: "Deploy to self-hosted Qiniu"
