@@ -1,4 +1,4 @@
-name: Build Self-Hosted PHP Binary (Unix)
+name: Build Swoole PHP Binary (Unix)
 
 on:
   workflow_dispatch:
