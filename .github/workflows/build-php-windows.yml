@@ -35,7 +35,7 @@ jobs:
                 Add-Content -Path $env:GITHUB_OUTPUT -Value "DEPLOY_TARGET=${{ secrets.DEPLOY_SERVER_TARGET_WINDOWS_SPC_MAX }}"
             }
           }  
-        
+          
           switch ("${{ matrix.runner }}") {
               "windows-latest" {
                   Add-Content -Path $env:GITHUB_OUTPUT -Value "OS=windows"
@@ -43,7 +43,7 @@ jobs:
                   Add-Content -Path $env:GITHUB_OUTPUT -Value "CMD=bin/spc"
               }
           }
-            
+
       - name: "Checkout remote"
         if: github.repository != 'crazywhalecc/static-php-cli'
         uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
 
       # If there's no dependencies cache, fetch sources
       - name: "Download sources"
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.S_GITHUB_TOKEN }}
         run: ${{ steps.process-env.outputs.CMD }} download --with-php=${{ matrix.php-version }} --for-extensions="${{ steps.process-env.outputs.EXTENSIONS }}" --retry=5 --prefer-pre-built
 
@@ -109,7 +109,7 @@ jobs:
         shell: bash
         run: |
           echo -e "# Note\n\nCurrent distribution uses extensions:\n\n${{ steps.process-env.outputs.EXTENSIONS }}\n\nUsing compile command:\n\n  bin/spc build --build-cli --build-micro \"${{ steps.process-env.outputs.EXTENSIONS }}\" --debug --with-upx-pack" > dist/README.txt
-          
+
       - name: "Deploy to self-hosted OSS"
         uses: static-php/upload-s3-action@v1.0.0
         with:

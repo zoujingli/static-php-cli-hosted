@@ -71,7 +71,7 @@ jobs:
               echo "CMD=bin/spc" >> "$GITHUB_OUTPUT"
               ;;
           esac
-      
+
       - name: "Checkout remote"
         if: github.repository != 'crazywhalecc/static-php-cli'
         uses: actions/checkout@v4
@@ -85,7 +85,7 @@ jobs:
         with:
           php-version: 8.2
           tools: pecl, composer
-          extensions: curl, openssl, mbstring
+          extensions: pcu,bcmath,calendar,ctype,curl,dba,dom,exif,fileinfo,filter,gd,iconv,intl,mbregex,mbstring,mysqli,mysqlnd,opcache,openssl,pcntl,pdo,pdo_mysql,pdo_pgsql,pdo_sqlite,pgsql,phar,posix,readline,redis,session,simplexml,sockets,sodium,sqlite3,swoole,tokenizer,xml,xmlreader,xmlwriter,xsl,zip,zlib
           ini-values: memory_limit=-1
 
       - name: "Cache composer packages"
